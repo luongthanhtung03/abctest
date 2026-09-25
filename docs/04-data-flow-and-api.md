@@ -112,6 +112,8 @@ Payload có **cùng một schema (zod)** và được validate ở 3 nơi: form 
 | `POST /agent/jobs/claim` | Agent | Nhận một job (200) hoặc không có việc (204). Cập nhật `last_seen` |
 | `POST /agent/jobs/:id/complete` | Agent | Upload file (multipart) → COMPLETED |
 | `POST /agent/jobs/:id/fail` | Agent | Báo lỗi `{code, message, retryable}` |
+| `POST /agent/jobs/:id/events` | Agent | Ghi thông tin vào timeline, ví dụ AI đã chuẩn hoá, AI fallback hoặc cảnh báo mâu thuẫn. Không ảnh hưởng trạng thái |
+| `GET /agent-status` | Người dùng | Mac mini đang online hay offline (`last_seen_at`) |
 
 ## Thứ tự lưu kết quả (an toàn khi bị ngắt giữa chừng)
 

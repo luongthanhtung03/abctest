@@ -49,6 +49,7 @@ sequenceDiagram
 ```
 
 - Mỗi **lần mở form** sinh một key. Nút "Gửi" bị vô hiệu trong lúc đang gửi.
+- Nếu **người dùng khác** gửi lại một key đã tồn tại, backend trả **409** thay vì trả về báo giá đó, để tránh lộ số báo giá của người khác.
 - **Vì sao không phát hiện trùng theo nội dung** (cùng khách, cùng sản phẩm trong 1 phút)? Vì Sales có thể cố ý tạo hai báo giá giống nhau. Key định danh *một lần bấm Gửi*, không định danh nội dung.
 - Nguyên tắc này cũng áp dụng cho agent: `/complete` chỉ được chấp nhận một lần. Nếu agent gửi lại sau khi job đã COMPLETED thì backend trả OK mà không làm gì.
 
