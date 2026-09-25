@@ -6,6 +6,7 @@
     "apps/*"
   ],
   "scripts": {
+    "postinstall": "npm run build -w @abc/shared",
     "db:up": "docker compose up -d",
     "db:migrate": "npm run prisma:migrate -w @abc/api",
     "db:seed": "npm run prisma:seed -w @abc/api",
