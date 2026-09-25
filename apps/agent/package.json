@@ -1,0 +1,26 @@
+{
+  "name": "@abc/agent",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "start": "ts-node --transpile-only src/main.ts",
+    "build-template": "ts-node --transpile-only scripts/build-template.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@abc/shared": "*",
+    "docxtemplater": "^3.60.0",
+    "dotenv": "^16.4.5",
+    "pizzip": "^3.1.7",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "docx": "^9.5.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.2.0"
+  }
+}
