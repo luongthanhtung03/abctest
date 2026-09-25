@@ -1,0 +1,99 @@
+// Data model – see docs/06-data-model.md
+// Kept minimal for the demo: PK, FK and the unique constraints that protect correctness.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String   @map("password_hash")
+  role         String // 'sales' | 'admin'
+  quotes       Quote[]
+
+  @@map("users")
+}
+
+model Customer {
+  id          String  @id @default(cuid())
+  code        String
+  name        String
+  taxCode     String  @map("tax_code")
+  address     String
+  contactName String  @map("contact_name")
+  phone       String
+  email       String
+  quotes      Quote[]
+
+  @@map("customers")
+}
+
+model Product {
+  id        String @id @default(cuid())
+  sku       String
+  name      String
+  spec      String
+  unit      String
+  listPrice Int    @map("list_price") // integer VND
+
+  @@map("products")
+}
+
+model Quote {
+  id              String    @id @default(cuid())
+  seq             Int       @default(autoincrement()) // feeds quote_no
+  quoteNo         String    @unique @map("quote_no") // BG-2026-0001
+  customerId      String    @map("customer_id")
+  createdById     String    @map("created_by")
+  status          String // PENDING | PROCESSING | COMPLETED | FAILED
+  idempotencyKey  String    @unique @map("idempotency_key")
+  templateVersion String    @map("template_version")
+  payload         Json // frozen snapshot sent to the agent
+  total           BigInt // copied from payload for list display
+  attempts        Int       @default(0)
+  nextRunAt       DateTime  @default(now()) @map("next_run_at")
+  lockedBy        String?   @map("locked_by")
+  lockedUntil     DateTime? @map("locked_until")
+  errorCode       String?   @map("error_code")
+  errorMessage    String?   @map("error_message")
+  fileKey         String?   @map("file_key") // relative key: works for local and S3
+  fileSize        Int?      @map("file_size")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  completedAt     DateTime? @map("completed_at")
+
+  customer  Customer     @relation(fields: [customerId], references: [id])
+  createdBy User         @relation(fields: [createdById], references: [id])
+  events    QuoteEvent[]
+
+  @@map("quotes")
+}
+
+model QuoteEvent {
+  id         String   @id @default(cuid())
+  quoteId    String   @map("quote_id")
+  type       String
+  fromStatus String?  @map("from_status")
+  toStatus   String?  @map("to_status")
+  actor      String // user:<id> | agent:<id> | system
+  message    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  quote Quote @relation(fields: [quoteId], references: [id])
+
+  @@map("quote_events")
+}
+
+model Agent {
+  id         String   @id
+  lastSeenAt DateTime @map("last_seen_at")
+
+  @@map("agents")
+}

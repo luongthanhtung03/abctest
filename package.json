@@ -1,0 +1,24 @@
+{
+  "name": "abc-quote",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:migrate": "npm run prisma:migrate -w @abc/api",
+    "db:seed": "npm run prisma:seed -w @abc/api",
+    "build:shared": "npm run build -w @abc/shared",
+    "dev:api": "npm run dev -w @abc/api",
+    "dev:web": "npm run dev -w @abc/web",
+    "dev:agent": "npm run dev -w @abc/agent",
+    "test": "npm test -w @abc/shared -w @abc/agent"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "esbuild@0.28.2": true,
+    "prisma@6.19.3": true
+  }
+}
